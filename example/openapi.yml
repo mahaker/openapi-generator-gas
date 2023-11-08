@@ -1,0 +1,40 @@
+openapi: 3.0.3
+info:
+  title: API spec for openapi-generator-gas
+  summary: example spec
+  version: 0.0.1
+servers:
+  - url: http://localhost:8080
+    description: A local server
+paths:
+  /todo:
+    get:
+      summary: get TODO items
+      description: get TODO items
+      operationId: getTodoItems
+      parameters:
+        - name: userId
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: schoolYear
+          in: query
+          required: false
+          schema:
+            type: integer
+      responses:
+        200:
+          description: TODO items
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - name
+                properties:
+                  name:
+                    type: string
+                  id:
+                    type: integer
+                    
