@@ -1,36 +1,37 @@
+#!/usr/bin/env node
+
 import { defineCommand, runMain } from 'citty';
+import { generateFrontendSchema } from './generate';
 
 const main = defineCommand({
   meta: {
-    name: "hello",
-    version: "1.0.0",
-    description: "My Awesome CLI App",
+    name: 'openapi-generator-gas',
+    version: '0.0.1',
+    description: 'OpenAPI code generator for Google Apps Script',
   },
   args: {
-    name: {
-      type: "positional",
-      description: "Your name",
+    spec: {
+      type: 'string',
+      description: 'The OpenAPI specification file',
       required: true,
     },
-    address: {
-      type: "positional",
-      description: "Your home address",
+    outfile: {
+      type: 'string',
+      description: 'The generated file',
       required: true,
     },
-    friendly: {
-      type: "boolean",
-      description: "Use friendly greeting",
+    frontend: {
+      type: 'boolean',
+      description: 'Generated code format(for frontend)',
     },
-    dist: {
-      type: "string",
-      description: "The code dist folder",
+    server: {
+      type: 'boolean',
+      description: 'Generated code format(for server)',
     },
   },
   run({ args }) {
-    console.log(`${args.friendly ? "Hi" : "Greetings"} ${args.name}! And address is ${args.address}`);
-    console.log(`The dist folder is ${args.dist}`);
+    if (args.frontend) generateFrontendSchema({specFilePath: args.spec, outFilePath: args.outfile});
   },
 });
 
 runMain(main);
-

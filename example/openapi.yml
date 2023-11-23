@@ -6,35 +6,93 @@ info:
 servers:
   - url: http://localhost:8080
     description: A local server
+
 paths:
   /todo:
     get:
-      summary: get TODO items
-      description: get TODO items
-      operationId: getTodoItems
+      summary: get TODO item            # anything ok(not used)
+      description: get TODO item            # anything ok(not used)
+      operationId: getTodoItem
+      parameters:
+        - name: userId
+          in: query            # anything ok(not used)
+          required: true
+          schema:
+            type: string
+        - name: itemId
+          in: query
+          required: false
+          schema:
+            type: integer
+      responses:
+        200:                         # 200 status will be Return Type for function
+          description: specific TODO item            # anything ok(not used)
+          content:
+            application/json:            # `application/json` only supported
+              schema:
+                type: object
+                required:
+                  - itemId
+                  - title
+                properties:
+                  itemId:
+                    type: integer
+                  title:
+                    type: string
+                  description:
+                    type: string
+    post:
+      summary: create TODO item
+      description: create TODO item and return new itemId
+      operationId: postTodoItems
+      parameters:                   # `parameters` only supported. `requestBody` is not supported
+        - name: userId
+          in: query            # anything ok(not used)
+          required: true
+          schema:
+            type: string
+        - name: title
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: description
+          in: query
+          schema:
+            type: string
+      responses:
+        200:                         # 200 status will be Return Type for function
+          description: new itemId            # anything ok(not used)
+          content:
+            application/json:            # `application/json` only supported
+              schema:
+                type: object             # `type: object` only supportd
+                required:
+                  - itemId
+                properties:
+                  itemId:
+                    type: integer
+
+  /memo:
+    get:
+      summary: get own memo
+      description: get own memo
+      operationId: getMemo
       parameters:
         - name: userId
           in: query
           required: true
           schema:
             type: string
-        - name: schoolYear
-          in: query
-          required: false
-          schema:
-            type: integer
       responses:
         200:
-          description: TODO items
+          description: Own memo
           content:
             application/json:
               schema:
                 type: object
                 required:
-                  - name
+                  - memo
                 properties:
-                  name:
+                  memo:
                     type: string
-                  id:
-                    type: integer
-                    
