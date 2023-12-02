@@ -1,18 +1,17 @@
 # OpenAPI generator for Google Apps Script
 
-This is CLI tool that generate codes for Google Apps Script.
+A CLI tool that generate codes for Google Apps Script.
 
 ## Roadmap
 
 - [x] `.yml` file support
-- [ ] typescript code generation
-- [ ] `requestBody` parsing
+- [x] typescript code generation
+- [ ] `requestBody` parsing(support `type: array`, `type: object` in object)
 - [ ] `$ref` and `$component` parsing
-- [ ] nested parameters parsing
-- [ ] nested responses parsing
+- [ ] nested responses parsing(support `type: array`, `type: object` in object)
 - [ ] `.json` file support
 - [ ] javascript(jsdoc) code generation
-- [ ] throw error for invalid input
+- [ ] throw error for invalid input(a file specified by `--spec` option)
 - [ ] http status `400` support(rejectable)
 
 ### not supported
@@ -55,7 +54,7 @@ paths:
           schema:
             type: integer
       responses:
-        200:                                 # 200 status will be Return Type for function
+        200:                                 # 200 only supported(will be function's return type)
           description: specific TODO item    # anything ok(not used)
           content:
             application/json:                # `application/json` only supported
@@ -76,9 +75,65 @@ paths:
 - generated codes for frontend
 
 ```typescript
+export type GetTodoItemRequest = {
+  itemId: number;
+}
+
+export type GetTodoItemResponse = {
+  itemId: number;
+  title: string;
+  description?: string;
+}
+
+export function getTodoItem(request: GetTodoItemRequest): Promise<GetTodoItemResponse> {
+  return new Promise((resolve, reject) => {
+    google.script.run
+      .withSuccessHandler(resolve)
+      .withFailureHandler(reject)
+      .getTodoItem(request);
+  });
+}
+```
+
+and codes that you implemented
+
+```typescript
+import { getTodoItem } from 'path/to/outfile.ts';
+
+const test = async () => {
+  const req = { itemId: 1 };
+  const res = await getTodoItem(req);
+};
 ```
 
 - generated codes for backend
 
 ```typescript
+export type GetTodoItemRequest = {
+  itemId: number;
+}
+
+export type GetTodoItemResponse = {
+  itemId: number;
+  title: string;
+  description?: string;
+}
+
+export type IGetTodoItem = (request: GetTodoItemRequest) => GetTodoItemResponse;
+```
+
+and codes that you implemented
+
+```typescript
+import type { IGetTodoItem } from 'path/to/outfile.ts';
+
+const getTodoItem: IGetTodoItem = (req) => {
+  const itemId = req.itemId;
+
+  return {
+    itemId: 1,
+    title: 'Some title',
+    description: 'Some description',
+  }
+}
 ```

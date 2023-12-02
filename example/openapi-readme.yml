@@ -1,0 +1,39 @@
+openapi: 3.0.3
+info:
+  title: My OpenAPI spec
+  summary: example spec
+  version: 0.0.1
+servers:
+  - url: http://localhost:8080
+    description: A local server
+
+paths:
+  /todo:
+    get:
+      summary: get TODO item                 # anything ok(not used)
+      description: get TODO item             # anything ok(not used)
+      operationId: getTodoItem
+      parameters:
+        - name: itemId
+          in: query                          # anything ok(not used)
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:                                 # 200 status will be Return Type for function
+          description: specific TODO item    # anything ok(not used)
+          content:
+            application/json:                # `application/json` only supported
+              schema:
+                type: object
+                required:
+                  - itemId
+                  - title
+                properties:
+                  itemId:
+                    type: integer
+                  title:
+                    type: string
+                  description:
+                    type: string
+
