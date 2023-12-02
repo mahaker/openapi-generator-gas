@@ -121,4 +121,38 @@ const renderOperationsToStringForFrontend = (operations: Operation[]): OpenAPITy
   return { code };
 };
 
-export { collectOperations, renderOperationsToStringForFrontend };
+const renderOperationsToStringForBackend = (operations: Operation[]): OpenAPITypes.GeneratedCode => {
+  let code = '';
+
+  for(const operation of operations) {
+    const operationIdentifierName = operation.operationId.slice(0, 1).toUpperCase() + operation.operationId.slice(1);
+
+    let parameterIdentifierName = '';
+    if (operation.parameters !== undefined) {
+      parameterIdentifierName = `${operationIdentifierName}Request`;
+
+      code += `export type ${parameterIdentifierName} = {\n`
+      for(const p of Object.keys(operation.parameters)) {
+        code += `  ${p}${operation.parameters[p].required ? ':' : '?:'} ${operation.parameters[p].type === 'string' ? 'string' : 'number'};\n`
+      }
+      code += '}\n\n'
+    }
+
+    let responseIndetifierName = '';
+    if (operation.http200Content !== undefined) {
+      responseIndetifierName = `${operationIdentifierName}Response`;
+
+      code += `export type ${responseIndetifierName} = {\n`
+      for(const p of Object.keys(operation.http200Content)) {
+        code += `  ${p}${operation.http200Content[p].required ? ':' : '?:'} ${operation.http200Content[p].type === 'string' ? 'string' : 'number'};\n`
+      }
+      code += '}\n\n'
+    }
+
+    code += `export type I${operationIdentifierName} = (${parameterIdentifierName ? 'request: ' + parameterIdentifierName : ''}) => ${operation.http200Content ? responseIndetifierName : 'void'};`;
+    code += '\n\n';
+  }
+  return { code };
+}
+
+export { collectOperations, renderOperationsToStringForFrontend, renderOperationsToStringForBackend };

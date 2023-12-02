@@ -1,6 +1,6 @@
 import { describe, test, expect } from 'vitest';
 import type * as OpenAPITypes from '@/types';
-import { Operation, collectOperations, renderOperationsToStringForFrontend } from '@/openapi';
+import { Operation, collectOperations, renderOperationsToStringForFrontend, renderOperationsToStringForBackend } from '@/openapi';
 
 describe('collectOperations', () => {
   test('returns empty array if paths is empty', () => {
@@ -356,6 +356,87 @@ export function putHoge(): Promise<any> {
       .putHoge();
   });
 }
+
+`
+    );
+  });
+});
+
+describe('renderOperationsToStringForBackend', () => {
+  test('returns backend code', () => {
+    // arrange
+    const operations: Operation[] = [
+      {
+        operationId: 'getHoge',
+        parameters: {
+          userId: {
+            required: true,
+            type: 'integer',
+          },
+        },
+        http200Content: {
+          userName: {
+            required: true,
+            type: 'string',
+          },
+          age: {
+            required: false,
+            type: 'integer',
+          },
+          type: {
+            required: true,
+            type: 'number',
+          },
+        },
+      },
+      {
+        operationId: 'postHoge',
+        parameters: {
+          userId: {
+            required: true,
+            type: 'integer',
+          },
+          itemId: {
+            required: true,
+            type: 'number',
+          },
+          content: {
+            required: false,
+            type: 'string',
+          },
+        }
+      },
+      {
+        operationId: 'putHoge',
+      },
+    ];
+
+    // action
+    const result = renderOperationsToStringForBackend(operations);
+
+    // assert
+    expect(result.code).toBe(
+`export type GetHogeRequest = {
+  userId: number;
+}
+
+export type GetHogeResponse = {
+  userName: string;
+  age?: number;
+  type: number;
+}
+
+export type IGetHoge = (request: GetHogeRequest) => GetHogeResponse;
+
+export type PostHogeRequest = {
+  userId: number;
+  itemId: number;
+  content?: string;
+}
+
+export type IPostHoge = (request: PostHogeRequest) => void;
+
+export type IPutHoge = () => void;
 
 `
     );

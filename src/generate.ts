@@ -1,5 +1,5 @@
 import { loadOpenApiSpec, writeSchemaToFile } from './file';
-import { collectOperations, renderOperationsToStringForFrontend } from './openapi';
+import { collectOperations, renderOperationsToStringForFrontend, renderOperationsToStringForBackend } from './openapi';
 
 type GenerateSchemaSettings = {
   specFilePath: string;
@@ -16,4 +16,14 @@ const generateFrontendSchema = (settings: GenerateSchemaSettings): void => {
   writeSchemaToFile(outFilePath, code);
 };
 
-export { generateFrontendSchema };
+const generateBackendSchema = (settings: GenerateSchemaSettings): void => {
+  const { specFilePath, outFilePath } = settings;
+  const pathsObject = loadOpenApiSpec(specFilePath);
+
+  const operations = collectOperations(pathsObject);
+  const code = renderOperationsToStringForBackend(operations);
+
+  writeSchemaToFile(outFilePath, code);
+};
+
+export { generateFrontendSchema, generateBackendSchema };

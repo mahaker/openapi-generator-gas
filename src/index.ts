@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import { defineCommand, runMain } from 'citty';
-import { generateFrontendSchema } from './generate';
+import { generateFrontendSchema, generateBackendSchema } from './generate';
 
 const main = defineCommand({
   meta: {
@@ -24,13 +24,18 @@ const main = defineCommand({
       type: 'boolean',
       description: 'Generated code format(for frontend)',
     },
-    server: {
+    backend: {
       type: 'boolean',
-      description: 'Generated code format(for server)',
+      description: 'Generated code format(for backend)',
     },
   },
   run({ args }) {
-    if (args.frontend) generateFrontendSchema({specFilePath: args.spec, outFilePath: args.outfile});
+    const { spec, outfile, frontend: isFrontend, backend: isBackend } = args;
+
+    if (isFrontend && isBackend) throw new Error('Please pick either --frontend or --backend');
+
+    if (args.frontend) generateFrontendSchema({specFilePath: spec, outFilePath: outfile});
+    if (args.backend) generateBackendSchema({specFilePath: spec, outFilePath: outfile});
   },
 });
 
