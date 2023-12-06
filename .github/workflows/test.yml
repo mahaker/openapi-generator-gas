@@ -1,0 +1,20 @@
+name: unit tests
+on: [push]
+
+jobs:
+  unit-tests:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: [ 18, 20 ]
+    steps:
+      - uses: actions/checkout@v3
+      - name: setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node }}
+      - name: install dependencies
+        run: npm install
+      - name: test
+        run: npm run test
+
