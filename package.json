@@ -1,7 +1,7 @@
 {
   "name": "openapi-generator-gas",
   "version": "0.0.1",
-  "description": "",
+  "description": "A OpenAPI generator for Google Apps Script",
   "bin": {
     "openapi-generator-gas": "./bin/index.js"
   },
@@ -10,9 +10,9 @@
     "build": "tsc --noEmit && esbuild src/index.ts --bundle --platform=node --format=cjs --outfile=./bin/index.js",
     "test": "vitest run --config vitest.config.ts"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": ["openapi", "apps-script", "google-apps-script"],
+  "author": "Hideaki Matsunami <carbon0409@gmail.com>",
+  "license": "MIT",
   "devDependencies": {
     "@types/js-yaml": "^4.0.9",
     "esbuild": "^0.19.5",
