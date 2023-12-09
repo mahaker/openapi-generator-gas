@@ -1,7 +1,7 @@
 {
   "name": "openapi-generator-gas",
   "version": "0.0.1",
-  "description": "A OpenAPI generator for Google Apps Script",
+  "description": "A OpenAPI code generator for Google Apps Script",
   "bin": {
     "openapi-generator-gas": "./bin/index.js"
   },

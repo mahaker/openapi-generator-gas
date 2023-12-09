@@ -1,4 +1,4 @@
-# OpenAPI generator for Google Apps Script
+# OpenAPI code generator for Google Apps Script
 
 A CLI tool that generate codes for Google Apps Script.
 
