@@ -11,6 +11,8 @@ An example project is [here](https://github.com/mahaker/openapi-gas-example).
 - [ ] `requestBody` parsing(support `type: array`, `type: object` in object)
 - [ ] `$ref` and `$component` parsing
 - [ ] nested responses parsing(support `type: array`, `type: object` in object)
+- [ ] `server` and `example` field support
+   - if `google.script.run` is not defined, api calls to localhost
 - [ ] `.json` file support
 - [ ] javascript(jsdoc) code generation
 - [ ] throw error for invalid input(a file specified by `--spec` option)
