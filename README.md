@@ -2,6 +2,8 @@
 
 A CLI tool that generate codes for Google Apps Script.
 
+An example project is [here](https://github.com/mahaker/openapi-gas-example).
+
 ## Roadmap
 
 - [x] `.yml` file support
