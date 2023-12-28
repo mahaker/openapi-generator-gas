@@ -10,7 +10,7 @@ An example project is [here](https://github.com/mahaker/openapi-gas-example).
 - [x] typescript code generation
 - [ ] `requestBody` parsing(support `type: array`, `type: object` in object)
 - [ ] `$ref` and `$component` parsing
-- [ ] nested responses parsing(support `type: array`, `type: object` in object)
+- [ ] nested responses parsing(support `type: array` in object)
 - [ ] `server` and `example` field support
    - if `google.script.run` is not defined, api calls to localhost
 - [ ] `.json` file support

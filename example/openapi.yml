@@ -34,6 +34,7 @@ paths:
                 required:
                   - itemId
                   - title
+                  - createdUser
                 properties:
                   itemId:
                     type: integer
@@ -41,6 +42,42 @@ paths:
                     type: string
                   description:
                     type: string
+                  createdUser:
+                    type: object
+                    required:
+                      - firstName
+                      - lastName
+                      - email
+                    properties:
+                      firstName:
+                        type: string
+                      lastName:
+                        type: string
+                      birthDate:
+                        type: string
+                      email:
+                        type: string
+                      age:
+                        type: integer
+                  updatedUser:
+                    type: object
+                    required:
+                      - firstName
+                      - lastName
+                      - email
+                      - address
+                    properties:
+                      firstName:
+                        type: string
+                      lastName:
+                        type: string
+                      birthDate:
+                        type: string
+                      email:
+                        type: string
+                      address:
+                        type: string
+
     post:
       summary: create TODO item
       description: create TODO item and return new itemId

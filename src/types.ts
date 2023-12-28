@@ -1,16 +1,16 @@
+export type ResponseSchema = {
+  type: 'integer' | 'number' | 'string' | 'object',
+  required?: string[], // if type='object', maybe exists this property
+  properties?: { // if type='object', required this property
+    [propertyName: string]: ResponseSchema,
+  },
+};
+
 export type ResponseObject = {
   description: '',
   content?: {
     [contentType: string]: {  // support application/json only
-      schema: {
-        type: string,         // support object only
-        required?: string[],
-        properties: {
-          [propertyName: string]: {
-            type: 'integer' | 'number' | 'string',
-          },
-        },
-      },
+      schema: ResponseSchema,
     },
   },
 };

@@ -1,13 +1,8 @@
 import type * as OpenAPITypes from './types';
+import { collectResponseSchemas, getResponseSchemaObjects, } from './classes/responseSchema';
 
 const SUPPORTTED_METHODS: (keyof Omit<OpenAPITypes.PathItemObject, 'summary' | 'description'>)[] = ['get', 'put', 'post', 'delete', 'options', 'head', 'patch', 'trace'];
 
-type Http200Content = {
-  [propertyName: string]: {
-    required: boolean;
-    type: 'integer' | 'number' | 'string';
-  };
-};
 type OperationParameters = {
   [name: string]: {
     required: boolean;
@@ -17,7 +12,7 @@ type OperationParameters = {
 export type Operation = {
   operationId: string;
   parameters?: OperationParameters;
-  http200Content?: Http200Content;
+  hasHttp200Content?: boolean;
 };
 
 const collectOperations = (pathsObject: OpenAPITypes.PathsObject): Operation[] => {
@@ -33,7 +28,7 @@ const collectOperations = (pathsObject: OpenAPITypes.PathsObject): Operation[] =
       operations.push({
         operationId: op.operationId,
         parameters: getParameters(op),
-        http200Content: getHttp200Content(op),
+        hasHttp200Content: hasHttp200Content(op),
       });
     }
   }
@@ -58,31 +53,26 @@ const getParameters = (operation: OpenAPITypes.OperationObject): OperationParame
   }
 };
 
-const getHttp200Content = (operation: OpenAPITypes.OperationObject): Http200Content | undefined => {
+const hasHttp200Content = (operation: OpenAPITypes.OperationObject): boolean => {
   const r = operation.responses;
   const http200Content = r[200]?.content?.['application/json'];
   if (http200Content === undefined) {
-    return undefined;
+    return false;
   } else if (http200Content.schema.type !== 'object') {
-    return undefined;
+    return false;
   } else {
-    const requiredProps = new Set(http200Content.schema.required);
-    const content = Object.entries(http200Content.schema.properties).reduce((acc, property) => {
-      const propertyName = property[0];
-
-      acc[propertyName] = {
-        required: requiredProps.has(propertyName),
-        type: property[1].type,
-      };
-      return acc;
-    }, {} as Http200Content);
-
-    return content;
+    // TODO move to responseSchema.ts
+    const responseIndetifierName = operation.operationId.slice(0, 1).toUpperCase() + operation.operationId.slice(1) + 'Response';
+    collectResponseSchemas(responseIndetifierName, http200Content.schema);
+    return true;
   }
 };
 
 const renderOperationsToStringForFrontend = (operations: Operation[]): OpenAPITypes.GeneratedCode => {
   let code = '';
+  for (const o of getResponseSchemaObjects()) {
+    code += o.toCode();
+  }
 
   // TODO refactor: implement class for Operation and `render` method
   for(const operation of operations) {
@@ -98,17 +88,12 @@ const renderOperationsToStringForFrontend = (operations: Operation[]): OpenAPITy
     }
 
     let responseIndetifierName = '';
-    if (operation.http200Content !== undefined) {
+    if (operation.hasHttp200Content) {
+      // TODO move to responseSchema.ts
       responseIndetifierName = operation.operationId.slice(0, 1).toUpperCase() + operation.operationId.slice(1) + 'Response';
-
-      code += `export type ${responseIndetifierName} = {\n`
-      for(const p of Object.keys(operation.http200Content)) {
-        code += `  ${p}${operation.http200Content[p].required ? ':' : '?:'} ${operation.http200Content[p].type === 'string' ? 'string' : 'number'};\n`
-      }
-      code += '}\n\n'
     }
 
-    code += `export function ${operation.operationId}(${parameterIdentifierName ? 'request: ' + parameterIdentifierName : ''}): Promise<${operation.http200Content ? responseIndetifierName : 'any'}> {
+    code += `export function ${operation.operationId}(${parameterIdentifierName ? 'request: ' + parameterIdentifierName : ''}): Promise<${operation.hasHttp200Content ? responseIndetifierName : 'any'}> {
   return new Promise((resolve, reject) => {
     google.script.run
       .withSuccessHandler(resolve)
@@ -123,6 +108,9 @@ const renderOperationsToStringForFrontend = (operations: Operation[]): OpenAPITy
 
 const renderOperationsToStringForBackend = (operations: Operation[]): OpenAPITypes.GeneratedCode => {
   let code = '';
+  for (const o of getResponseSchemaObjects()) {
+    code += o.toCode();
+  }
 
   for(const operation of operations) {
     const operationIdentifierName = operation.operationId.slice(0, 1).toUpperCase() + operation.operationId.slice(1);
@@ -139,17 +127,12 @@ const renderOperationsToStringForBackend = (operations: Operation[]): OpenAPITyp
     }
 
     let responseIndetifierName = '';
-    if (operation.http200Content !== undefined) {
+    if (operation.hasHttp200Content) {
+      // TODO move to responseSchema.ts
       responseIndetifierName = `${operationIdentifierName}Response`;
-
-      code += `export type ${responseIndetifierName} = {\n`
-      for(const p of Object.keys(operation.http200Content)) {
-        code += `  ${p}${operation.http200Content[p].required ? ':' : '?:'} ${operation.http200Content[p].type === 'string' ? 'string' : 'number'};\n`
-      }
-      code += '}\n\n'
     }
 
-    code += `export type I${operationIdentifierName} = (${parameterIdentifierName ? 'request: ' + parameterIdentifierName : ''}) => ${operation.http200Content ? responseIndetifierName : 'void'};`;
+    code += `export type I${operationIdentifierName} = (${parameterIdentifierName ? 'request: ' + parameterIdentifierName : ''}) => ${operation.hasHttp200Content ? responseIndetifierName : 'void'};`;
     code += '\n\n';
   }
   return { code };
