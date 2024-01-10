@@ -50,7 +50,6 @@ export class ResponseSchemaObject {
   }
 }
 
-// TODO impl unit test
 let responseSchemaObjects: ResponseSchemaObject[] = [];
 export const getResponseSchemaObjects = () => responseSchemaObjects;
 export const collectResponseSchemas = (schemaName: string, schemaDef: OpenAPITypes.ResponseSchema) => {

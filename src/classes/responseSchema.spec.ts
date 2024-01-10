@@ -1,5 +1,6 @@
 import { describe, test, expect, } from 'vitest';
-import { ResponseSchemaPrimitive, ResponseSchemaObject, } from './responseSchema';
+import { collectResponseSchemas, getResponseSchemaObjects, ResponseSchemaPrimitive, ResponseSchemaObject, } from './responseSchema';
+import type { ResponseSchema } from '@/types';
 
 describe('ResponseSchemaPrimitive#toCode', () => {
   test('render code', () => {
@@ -38,6 +39,92 @@ describe('ResponseSchemaObject#toCode', () => {
   prop3: string;
   prop4: Hoge;
   prop5?: Fuga;
+};
+
+`
+    );
+  });
+});
+
+describe('collectResponseSchemas', () => {
+  test('get response schemas', () => {
+    // arrange
+    const schemaName = 'AnExampleApiResponse';
+    const schemaDef: ResponseSchema = {
+      type: 'object',
+      required: ['prop1', 'prop4',],
+      properties: {
+        prop1: {
+          type: 'integer',
+        },
+        prop2: {
+          type: 'object',
+          required: ['prop21'],
+          properties: {
+            prop21: { type: 'number', },
+            prop22: { type: 'string', },
+          },
+        },
+        prop3: {
+          type: 'string',
+        },
+        prop4: {
+          type: 'object',
+          required: ['prop42'],
+          properties: {
+            prop41: {
+              type: 'object',
+              properties: {
+                prop421: { type: 'integer', },
+                prop422: { type: 'integer', },
+              }
+            },
+            prop42: { type: 'string', },
+          },
+        },
+      },
+    };
+
+    // action
+    collectResponseSchemas(schemaName, schemaDef);
+    const responseSchemas = getResponseSchemaObjects();
+
+    // assert
+    expect(responseSchemas.length).toBe(4);
+
+    expect(responseSchemas[0].toCode()).toBe(
+`export type AnExampleApiResponseOfProp2 = {
+  prop21: number;
+  prop22?: string;
+};
+
+`
+    );
+    
+    expect(responseSchemas[1].toCode()).toBe(
+`export type AnExampleApiResponseOfProp4OfProp41 = {
+  prop421?: number;
+  prop422?: number;
+};
+
+`
+    );
+
+    expect(responseSchemas[2].toCode()).toBe(
+`export type AnExampleApiResponseOfProp4 = {
+  prop41?: AnExampleApiResponseOfProp4OfProp41;
+  prop42: string;
+};
+
+`
+    );
+
+    expect(responseSchemas[3].toCode()).toBe(
+`export type AnExampleApiResponse = {
+  prop1: number;
+  prop2?: AnExampleApiResponseOfProp2;
+  prop3?: string;
+  prop4: AnExampleApiResponseOfProp4;
 };
 
 `

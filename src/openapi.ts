@@ -1,7 +1,16 @@
 import type * as OpenAPITypes from './types';
 import { collectResponseSchemas, getResponseSchemaObjects, } from './classes/responseSchema';
 
-const SUPPORTTED_METHODS: (keyof Omit<OpenAPITypes.PathItemObject, 'summary' | 'description'>)[] = ['get', 'put', 'post', 'delete', 'options', 'head', 'patch', 'trace'];
+const SUPPORTTED_METHODS: (keyof Omit<OpenAPITypes.PathItemObject, 'summary' | 'description'>)[] = [
+  'get',
+  'put',
+  'post',
+  'delete',
+  'options',
+  'head',
+  'patch',
+  'trace',
+];
 
 type OperationParameters = {
   [name: string]: {
@@ -61,7 +70,6 @@ const hasHttp200Content = (operation: OpenAPITypes.OperationObject): boolean => 
   } else if (http200Content.schema.type !== 'object') {
     return false;
   } else {
-    // TODO move to responseSchema.ts
     const responseIndetifierName = operation.operationId.slice(0, 1).toUpperCase() + operation.operationId.slice(1) + 'Response';
     collectResponseSchemas(responseIndetifierName, http200Content.schema);
     return true;
