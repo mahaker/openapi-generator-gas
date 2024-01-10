@@ -50,6 +50,7 @@ export class ResponseSchemaObject {
   }
 }
 
+// TODO refactor: remove global object(this cause to e2e test separation)
 let responseSchemaObjects: ResponseSchemaObject[] = [];
 export const getResponseSchemaObjects = () => responseSchemaObjects;
 export const collectResponseSchemas = (schemaName: string, schemaDef: OpenAPITypes.ResponseSchema) => {
