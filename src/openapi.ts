@@ -101,7 +101,7 @@ const renderOperationsToStringForFrontend = (operations: Operation[]): OpenAPITy
       responseIndetifierName = operation.operationId.slice(0, 1).toUpperCase() + operation.operationId.slice(1) + 'Response';
     }
 
-    code += `export function ${operation.operationId}(${parameterIdentifierName ? 'request: ' + parameterIdentifierName : ''}): Promise<${operation.hasHttp200Content ? responseIndetifierName : 'any'}> {
+    code += `export function ${operation.operationId}(${parameterIdentifierName ? 'request: ' + parameterIdentifierName : ''}): Promise<${operation.hasHttp200Content ? responseIndetifierName : 'void'}> {
   return new Promise((resolve, reject) => {
     google.script.run
       .withSuccessHandler(resolve)
