@@ -217,7 +217,7 @@ export function getPath1API(request: GetPath1APIRequest): Promise<GetPath1APIRes
       .withFailureHandler(reject)
       .getPath1API(request);
   });
-}
+};
 
 export function putPath1API(): Promise<void> {
   return new Promise((resolve, reject) => {
@@ -226,7 +226,7 @@ export function putPath1API(): Promise<void> {
       .withFailureHandler(reject)
       .putPath1API();
   });
-}
+};
 
 export type PostPath1APIRequest = {
   userId: number;
@@ -241,7 +241,7 @@ export function postPath1API(request: PostPath1APIRequest): Promise<void> {
       .withFailureHandler(reject)
       .postPath1API(request);
   });
-}
+};
 
 export function DeletePath1API(): Promise<void> {
   return new Promise((resolve, reject) => {
@@ -250,7 +250,7 @@ export function DeletePath1API(): Promise<void> {
       .withFailureHandler(reject)
       .DeletePath1API();
   });
-}
+};
 
 export function optionsPath1API(): Promise<OptionsPath1APIResponse> {
   return new Promise((resolve, reject) => {
@@ -259,7 +259,7 @@ export function optionsPath1API(): Promise<OptionsPath1APIResponse> {
       .withFailureHandler(reject)
       .optionsPath1API();
   });
-}
+};
 
 export function headPath1API(): Promise<void> {
   return new Promise((resolve, reject) => {
@@ -268,7 +268,7 @@ export function headPath1API(): Promise<void> {
       .withFailureHandler(reject)
       .headPath1API();
   });
-}
+};
 
 export function patchPath1API(): Promise<void> {
   return new Promise((resolve, reject) => {
@@ -277,7 +277,7 @@ export function patchPath1API(): Promise<void> {
       .withFailureHandler(reject)
       .patchPath1API();
   });
-}
+};
 
 export function tracePath1API(): Promise<void> {
   return new Promise((resolve, reject) => {
@@ -286,7 +286,7 @@ export function tracePath1API(): Promise<void> {
       .withFailureHandler(reject)
       .tracePath1API();
   });
-}
+};
 
 export function postPath2API(): Promise<void> {
   return new Promise((resolve, reject) => {
@@ -295,7 +295,7 @@ export function postPath2API(): Promise<void> {
       .withFailureHandler(reject)
       .postPath2API();
   });
-}
+};
 
 `
     );

@@ -108,7 +108,7 @@ const renderOperationsToStringForFrontend = (operations: Operation[]): OpenAPITy
       .withFailureHandler(reject)
       .${operation.operationId}(${parameterIdentifierName ? 'request': ''});
   });
-}`;
+};`;
     code += '\n\n';
   }
   return { code };
