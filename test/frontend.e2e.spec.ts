@@ -208,7 +208,7 @@ export type OptionsPath1APIResponse = {
 
 export type GetPath1APIRequest = {
   userId: number;
-}
+};
 
 export function getPath1API(request: GetPath1APIRequest): Promise<GetPath1APIResponse> {
   return new Promise((resolve, reject) => {
@@ -232,7 +232,7 @@ export type PostPath1APIRequest = {
   userId: number;
   title: string;
   body?: string;
-}
+};
 
 export function postPath1API(request: PostPath1APIRequest): Promise<void> {
   return new Promise((resolve, reject) => {

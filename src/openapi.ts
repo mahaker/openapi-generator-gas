@@ -92,7 +92,7 @@ const renderOperationsToStringForFrontend = (operations: Operation[]): OpenAPITy
       for(const p of Object.keys(operation.parameters)) {
         code += `  ${p}${operation.parameters[p].required ? ':' : '?:'} ${operation.parameters[p].type === 'string' ? 'string' : 'number'};\n`
       }
-      code += '}\n\n'
+      code += '};\n\n'
     }
 
     let responseIndetifierName = '';
